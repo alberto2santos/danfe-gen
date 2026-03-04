@@ -15,9 +15,11 @@ build/
 # ─── Variáveis de ambiente ────────────────────────────────────
 .env
 .env.local
+.env.production
+.env.production.local
+.env.development
 .env.development.local
 .env.test.local
-.env.production.local
 
 # ─── Logs ─────────────────────────────────────────────────────
 npm-debug.log*
@@ -64,3 +66,4 @@ public/fonts/*.woff2
 .vercel
 .netlifyestrutura.txt
 .env.production
+.vscode/
