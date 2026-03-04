@@ -62,4 +62,5 @@ public/fonts/*.woff2
 *.pem
 *.key
 .vercel
-.netlify
+.netlifyestrutura.txt
+.env.production
