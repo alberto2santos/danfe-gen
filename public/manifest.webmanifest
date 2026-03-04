@@ -1,0 +1,23 @@
+{
+  "name":             "DanfeGen — Conversor NF-e para DANFE",
+  "short_name":       "DanfeGen",
+  "description":      "Conversor gratuito de XML NF-e para DANFE PDF e Etiqueta Térmica 80mm.",
+  "start_url":        "/",
+  "display":          "standalone",
+  "background_color": "#ffffff",
+  "theme_color":      "#2563eb",
+  "lang":             "pt-BR",
+  "icons": [
+    { "src": "/danfegen-icon.svg", "sizes": "any",     "type": "image/svg+xml", "purpose": "any maskable" }
+  ],
+  "categories":       ["business", "productivity", "utilities"],
+  "screenshots": [
+    {
+      "src":          "/og-preview.png",
+      "sizes":        "1200x630",
+      "type":         "image/png",
+      "form_factor":  "wide",
+      "label":        "DanfeGen — Conversor NF-e para DANFE"
+    }
+  ]
+}

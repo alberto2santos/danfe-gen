@@ -1,0 +1,181 @@
+/* ─── Preview em tela ─────────────────────────────────────────── */
+.thermal-wrapper {
+  width:         288px;
+  margin:        0 auto;
+  padding:       8px;
+  font-family:   'Courier New', Courier, monospace;
+  background:    #fff;
+  color:         #000;
+  border:        1px dashed #d4d4d8;
+  border-radius: 8px;
+  font-size:     9px;
+  line-height:   1.4;
+}
+
+.thermal-company-name    { font-size: 12px; font-weight: bold; display: block; text-align: center; }
+.thermal-company-cnpj    { font-size: 9px;  display: block; text-align: center; }
+.thermal-company-address { font-size: 8px;  display: block; text-align: center; margin-top: 2px; }
+
+.thermal-title {
+  text-align:    center;
+  font-size:     10px;
+  font-weight:   bold;
+  border-top:    1px solid #000;
+  border-bottom: 1px solid #000;
+  padding:       3px 0;
+  margin:        4px 0;
+}
+.thermal-subtitle { text-align: center; font-size: 8px; display: block; }
+
+.thermal-divider        { border-top: 1px solid #000; margin: 4px 0; }
+.thermal-divider-dashed { border-top: 1px dashed #aaa; margin: 4px 0; }
+
+.thermal-field {
+  display:       flex;
+  gap:           3px;
+  font-size:     9px;
+  line-height:   1.5;
+  margin-bottom: 2px;
+  flex-wrap:     wrap;
+}
+.thermal-label { font-weight: bold; white-space: nowrap; }
+.thermal-value { flex: 1; word-break: break-word; }
+.thermal-bold  { font-weight: bold; }
+.thermal-mono  { font-family: 'Courier New', monospace; letter-spacing: 0.5px; }
+
+.thermal-section-title {
+  font-size:      8px;
+  font-weight:    bold;
+  text-transform: uppercase;
+  border-bottom:  1px solid #000;
+  margin-bottom:  3px;
+  padding-bottom: 2px;
+}
+
+.thermal-table          { width: 100%; border-collapse: collapse; font-size: 8px; margin: 4px 0; }
+.thermal-table th       { font-size: 7px; font-weight: bold; border-bottom: 1px solid #000; padding: 1px 2px; text-align: left; }
+.thermal-table td       { font-size: 8px; padding: 2px; vertical-align: top; border-bottom: 1px dashed #ccc; }
+.thermal-table .col-num { text-align: right; white-space: nowrap; font-family: 'Courier New', monospace; }
+.thermal-table .col-desc{ word-break: break-word; }
+
+.thermal-totals     { font-size: 9px; margin-top: 4px; }
+.thermal-total-line { display: flex; justify-content: space-between; margin-bottom: 2px; }
+.thermal-total-main { font-size: 11px; font-weight: bold; border-top: 1px solid #000; padding-top: 3px; margin-top: 3px; }
+
+.thermal-barcode        { display: flex; flex-direction: column; align-items: center; margin: 6px 0; }
+.thermal-barcode-digits { font-size: 7px; font-family: 'Courier New', monospace; letter-spacing: 0.5px; margin-top: 3px; word-break: break-all; text-align: center; }
+
+.thermal-logo      { max-width: 120px; max-height: 60px; object-fit: contain; display: block; margin: 0 auto 4px; }
+.thermal-watermark { text-align: center; font-size: 8px; font-weight: bold; color: #cc0000; border: 1px solid #cc0000; padding: 3px; margin: 4px 0; }
+.thermal-footer    { text-align: center; font-size: 7px; margin-top: 6px; color: #555; }
+
+/* ─── Impressão térmica ───────────────────────────────────────── */
+@media print {
+
+  /* ─── Tamanho e margens da página ─────────────────────────── */
+  @page {
+    size:   80mm auto;
+    margin: 0;          /* ← elimina cabeçalho/rodapé do browser */
+  }
+
+  /* ─── Oculta tudo — visibility preserva espaço no layout
+         mas torna invisível para impressão                ─────── */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* ─── Revela só o bloco térmico e seus filhos ─────────────── */
+  #thermal-print-root,
+  #thermal-print-root * {
+    visibility: visible !important;
+  }
+
+  /* ─── Posiciona o bloco no topo da folha ──────────────────── */
+  #thermal-print-root {
+    position:          fixed !important;
+    top:               0 !important;
+    left:              0 !important;
+    width:             100% !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* ─── Evita quebra dentro do wrapper ──────────────────────── */
+  .thermal-wrapper {
+    width:             76mm !important;
+    margin:            0 auto !important;
+    padding:           2mm !important;
+    font-family:       'Courier New', Courier, monospace !important;
+    background:        #fff !important;
+    color:             #000 !important;
+    border:            none !important;
+    border-radius:     0 !important;
+    page-break-inside: avoid !important;
+    break-inside:      avoid !important;
+  }
+
+  /* ─── Cores exatas na impressão ───────────────────────────── */
+  #thermal-print-root * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust:         exact !important;
+  }
+
+  /* ─── Tipografia e layout ──────────────────────────────────── */
+  .thermal-company-name    { font-size: 12px !important; font-weight: bold !important; display: block !important; }
+  .thermal-company-cnpj    { font-size: 9px !important;  display: block !important; }
+  .thermal-company-address { font-size: 8px !important;  display: block !important; margin-top: 1mm !important; }
+
+  .thermal-title {
+    text-align:    center !important;
+    font-size:     10px !important;
+    font-weight:   bold !important;
+    border-top:    1px solid #000 !important;
+    border-bottom: 1px solid #000 !important;
+    padding:       1mm 0 !important;
+    margin:        1mm 0 !important;
+  }
+  .thermal-subtitle { text-align: center !important; font-size: 8px !important; display: block !important; }
+
+  .thermal-divider        { border-top: 1px solid #000 !important; margin: 1.5mm 0 !important; }
+  .thermal-divider-dashed { border-top: 1px dashed #000 !important; margin: 1.5mm 0 !important; }
+
+  .thermal-field {
+    display:       flex !important;
+    gap:           2px !important;
+    font-size:     9px !important;
+    line-height:   1.4 !important;
+    margin-bottom: 0.5mm !important;
+    flex-wrap:     wrap !important;
+  }
+  .thermal-label { font-weight: bold !important; white-space: nowrap !important; }
+  .thermal-value { flex: 1 !important; word-break: break-word !important; }
+  .thermal-bold  { font-weight: bold !important; }
+  .thermal-mono  { font-family: 'Courier New', monospace !important; letter-spacing: 0.5px !important; }
+
+  .thermal-section-title {
+    font-size:      8px !important;
+    font-weight:    bold !important;
+    text-transform: uppercase !important;
+    border-bottom:  1px solid #000 !important;
+    margin-bottom:  1mm !important;
+    padding-bottom: 0.5mm !important;
+  }
+
+  .thermal-table          { width: 100% !important; border-collapse: collapse !important; font-size: 8px !important; margin: 1mm 0 !important; }
+  .thermal-table th       { font-size: 7px !important; font-weight: bold !important; border-bottom: 1px solid #000 !important; padding: 1px 2px !important; text-align: left !important; }
+  .thermal-table td       { font-size: 8px !important; padding: 1px 2px !important; vertical-align: top !important; border-bottom: 1px dashed #ccc !important; }
+  .thermal-table .col-num { text-align: right !important; white-space: nowrap !important; font-family: 'Courier New', monospace !important; }
+
+  .thermal-totals     { font-size: 9px !important; margin-top: 1mm !important; }
+  .thermal-total-line { display: flex !important; justify-content: space-between !important; margin-bottom: 0.5mm !important; }
+  .thermal-total-main { font-size: 11px !important; font-weight: bold !important; border-top: 1px solid #000 !important; padding-top: 1mm !important; margin-top: 1mm !important; }
+
+  .thermal-barcode        { display: flex !important; flex-direction: column !important; align-items: center !important; margin: 2mm 0 !important; }
+  .thermal-barcode-digits { font-size: 7px !important; font-family: 'Courier New', monospace !important; letter-spacing: 0.5px !important; margin-top: 1mm !important; word-break: break-all !important; text-align: center !important; }
+
+  .thermal-logo      { max-width: 30mm !important; max-height: 15mm !important; object-fit: contain !important; display: block !important; margin: 0 auto 1mm !important; }
+  .thermal-watermark { text-align: center !important; font-size: 8px !important; font-weight: bold !important; color: #cc0000 !important; border: 1px solid #cc0000 !important; padding: 1mm !important; margin: 1mm 0 !important; }
+  .thermal-footer    { text-align: center !important; font-size: 7px !important; margin-top: 2mm !important; }
+
+  .thermal-page-break { page-break-after: always !important; }
+  .no-print           { display: none !important; }
+}

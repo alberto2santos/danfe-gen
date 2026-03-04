@@ -1,0 +1,65 @@
+# ─── Dependências ─────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ─── Build ────────────────────────────────────────────────────
+dist/
+dist-ssr/
+build/
+
+# ─── Cache Vite ───────────────────────────────────────────────
+.vite/
+*.local
+
+# ─── Variáveis de ambiente ────────────────────────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ─── Logs ─────────────────────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ─── Editor ───────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ─── OS ───────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ─── TypeScript ───────────────────────────────────────────────
+*.tsbuildinfo
+
+# ─── Testes ───────────────────────────────────────────────────
+coverage/
+
+# ─── Fontes locais (não subir arquivos binários grandes) ──────
+public/fonts/*.ttf
+public/fonts/*.woff
+public/fonts/*.woff2
+
+# ─── Misc ─────────────────────────────────────────────────────
+*.pem
+*.key
+.vercel
+.netlify

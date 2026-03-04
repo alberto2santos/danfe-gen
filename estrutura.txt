@@ -1,0 +1,86 @@
+﻿├── .env
+├── .env.production
+├── .gitignore
+├── api
+│   ├── generate-pdf.ts
+│   ├── parse-xml.ts
+├── estrutura.txt
+├── index.html
+├── LICENSE
+├── middleware.ts
+├── package.json
+├── package-lock.json
+├── postcss.config.js
+├── public
+│   ├── danfegen-icon.svg
+│   ├── fonts
+│   │   ├── Inter-Variable.woff2
+│   │   ├── Inter-Regular.ttf
+│   │   ├── Inter-Bold.ttf
+│   ├── manifest.webmanifest
+│   ├── og-preview.png
+├── README.md
+├── src
+│   ├── App.tsx
+│   ├── assets
+│   ├── components
+│   │   ├── Danfe
+│   │   │   ├── DanfeA4.tsx
+│   │   │   ├── DanfeThermal.tsx
+│   │   │   ├── DanfeThermal.css
+│   │   ├── Layout
+│   │   │   ├── AppFooter.tsx
+│   │   │   ├── AppHeader.tsx
+│   │   ├── Preview
+│   │   │   ├── DanfeFields.tsx
+│   │   │   ├── DanfePreview.tsx
+│   │   ├── Settings
+│   │   │   ├── CompanyConfig.tsx
+│   │   │   ├── ErpConnect.tsx
+│   │   ├── UI
+│   │   │   ├── Alert.tsx
+│   │   │   ├── Badge.tsx
+│   │   │   ├── Button.tsx
+│   │   │   ├── Progress.tsx
+│   │   │   ├── Spinner.tsx
+│   │   │   ├── Toast.tsx
+│   │   ├── Upload
+│   │   │   ├── BatchProgress.tsx
+│   │   │   ├── UploadZone.tsx
+│   ├── contexts
+│   │   ├── CompanyContext.tsx
+│   │   ├── NFeContext.tsx
+│   │   ├── ThemeContext.tsx
+│   ├── env.ts
+│   ├── hooks
+│   │   ├── useBatchProcessor.ts
+│   │   ├── useCompanyConfig.ts
+│   │   ├── useErpConnection.ts
+│   │   ├── usePdfGenerator.ts
+│   │   ├── useThermalPrint.ts
+│   │   ├── useXmlParser.ts
+│   ├── index.css
+│   ├── main.tsx
+│   ├── schemas
+│   │   ├── companySchema.ts
+│   │   ├── nfeSchema.ts
+│   ├── types
+│   │   ├── company.types.ts
+│   │   ├── erp.types.ts
+│   │   ├── nfe.types.ts
+│   ├── utils
+│   │   ├── accessKeyValidator.ts
+│   │   ├── cnpjValidator.ts
+│   │   ├── code128.ts
+│   │   ├── danfeLayout.ts
+│   │   ├── formatters.ts
+│   │   ├── qrCodeSvg.ts
+│   │   ├── xmlParser.ts
+│   │   ├── zipProcessor.ts
+│   ├── vite-env.d.ts
+├── tailwind.config.js
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+├── vercel.json
+├── vite.config.ts
