@@ -67,3 +67,5 @@ public/fonts/*.woff2
 .netlifyestrutura.txt
 .env.production
 .vscode/
+
+.env*.local

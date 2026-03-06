@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+User-agent: *
+Disallow: /api/
+
+Sitemap: https://danfe-gen.vercel.app/sitemap.xml

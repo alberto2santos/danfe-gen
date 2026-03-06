@@ -1,11 +1,11 @@
-import { useState, useCallback }      from 'react'
+import { useState, useCallback } from 'react'
 import {
   Download, Printer, FileText,
-  ChevronDown,
-}                                      from 'lucide-react'
-import { useNFe }                      from '@/contexts/NFeContext'
-import { useCompany }                  from '@/contexts/CompanyContext'
-import type { DanfeFormat }            from '@/types/nfe.types'
+  ChevronDown, Share2, Mail,
+} from 'lucide-react'
+import { useNFe } from '@/contexts/NFeContext'
+import { useCompany } from '@/contexts/CompanyContext'
+import type { DanfeFormat } from '@/types/nfe.types'
 import {
   IdentificacaoFields,
   EmitenteFields,
@@ -14,18 +14,17 @@ import {
   TotaisFields,
   TransporteFields,
   InformacoesAdicionaisFields,
-}                                      from './DanfeFields'
-import { formatDate }                  from '@/utils/formatters'
-import { DanfeThermal }                from '@/components/Danfe/DanfeThermal'
-import { useThermalPrint }             from '@/hooks/useThermalPrint'
-import { usePdfGenerator }             from '@/hooks/usePdfGenerator'
+} from './DanfeFields'
+import { formatDate } from '@/utils/formatters'
+import { DanfeThermal } from '@/components/Danfe/DanfeThermal'
+import { useThermalPrint } from '@/hooks/useThermalPrint'
+import { usePdfGenerator } from '@/hooks/usePdfGenerator'
 
-/* ─── Constante de API key pública ────────────────────────────── */
 const DEMO_KEY = import.meta.env.VITE_DEMO_KEY ?? 'demo-public-key-2024'
 
 /* ─── Seletor de formato ──────────────────────────────────────── */
 interface FormatSelectorProps {
-  value:    DanfeFormat
+  value: DanfeFormat
   onChange: (f: DanfeFormat) => void
 }
 
@@ -39,10 +38,10 @@ function FormatSelector({ value, onChange }: FormatSelectorProps) {
       {(
         [
           {
-            id:    'a4' as DanfeFormat,
+            id: 'a4' as DanfeFormat,
             label: 'DANFE A4',
-            hint:  'Layout oficial SEFAZ',
-            icon:  (
+            hint: 'Layout oficial SEFAZ',
+            icon: (
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <rect x="3" y="1" width="10" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.4" />
                 <path d="M5 5h6M5 7.5h6M5 10h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
@@ -50,10 +49,10 @@ function FormatSelector({ value, onChange }: FormatSelectorProps) {
             ),
           },
           {
-            id:    'thermal' as DanfeFormat,
+            id: 'thermal' as DanfeFormat,
             label: 'Etiqueta 80mm',
-            hint:  'Impressora térmica',
-            icon:  (
+            hint: 'Impressora térmica',
+            icon: (
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <rect x="4" y="1" width="8" height="11" rx="1" stroke="currentColor" strokeWidth="1.4" />
                 <path d="M6 4h4M6 6.5h4M6 9h2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
@@ -115,68 +114,137 @@ function NfeBadge({ tpAmb }: { tpAmb: '1' | '2' }) {
 /* ─── Preview principal ───────────────────────────────────────── */
 export function DanfePreview() {
   const { state, setFormat, goDownload, reset } = useNFe()
-  const { config }                              = useCompany()
-  const { nfe, format, fileName }              = state
+  const { config } = useCompany()
+  const { nfe, format, fileName } = state
 
-  const [isGenerating, setIsGenerating]       = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
   const [showAllSections, setShowAllSections] = useState(false)
 
-  const { generateA4 } = usePdfGenerator()
-  const { print }      = useThermalPrint()
+  const canShare = typeof navigator !== 'undefined' && !!navigator.share
 
-  /* ─── Handler unificado de geração ───────────────────────────
-     Térmica  → useThermalPrint (window.print com @page 80mm)
-     A4 local → usePdfGenerator (@react-pdf/renderer, zero servidor)
-     A4 API   → /api/generate-pdf como fallback se PDF local falhar
-  ─────────────────────────────────────────────────────────────── */
+  const { generateA4 } = usePdfGenerator()
+  const { print } = useThermalPrint()
+
+  /* ─── Download PDF ────────────────────────────────────────── */
   const handleGenerate = useCallback(async () => {
     if (!nfe) return
     setIsGenerating(true)
-
     try {
       if (format === 'thermal') {
-        // window.print() gerenciado pelo useThermalPrint
         await print()
       } else {
-        // Tenta gerar PDF diretamente no browser (zero servidor)
         try {
           await generateA4(nfe, config)
           goDownload()
         } catch {
-          // Fallback: chama a Vercel Function caso o client falhe
+          // Fallback — API
           const res = await fetch('/api/generate-pdf', {
-            method:  'POST',
+            method: 'POST',
             headers: {
-              'Content-Type':   'application/json',
+              'Content-Type': 'application/json',
               'x-danfegen-key': DEMO_KEY,
             },
-            body: JSON.stringify({
-              mode:    'single',
-              nfeData: nfe,
-              config,
-            }),
+            body: JSON.stringify({ mode: 'single', nfeData: nfe, config }),
           })
-
           if (!res.ok) throw new Error(`API erro ${res.status}`)
-
-          const blob     = await res.blob()
-          const url      = URL.createObjectURL(blob)
-          const link     = document.createElement('a')
-          link.href      = url
-          link.download  = `DANFE-NF${String(nfe.nNF).padStart(9, '0')}-${nfe.serie}.pdf`
+          const blob = await res.blob()
+          const url = URL.createObjectURL(blob)
+          const link = document.createElement('a')
+          link.href = url
+          link.download = `DANFE-NF${String(nfe.nNF).padStart(9, '0')}-${nfe.serie}.pdf`
           link.click()
           URL.revokeObjectURL(url)
-
           goDownload()
         }
       }
     } catch {
-      // Último fallback: impressão via browser
       window.print()
     } finally {
       setIsGenerating(false)
     }
   }, [nfe, format, config, print, generateA4, goDownload])
+
+  /* ─── Compartilhar via Web Share API ─────────────────────── */
+  const handleShare = useCallback(async () => {
+    if (!nfe) return
+    setIsGenerating(true)
+
+    const pdfName = `DANFE-NF${String(nfe.nNF).padStart(9, '0')}-${nfe.serie}.pdf`
+
+    try {
+      // Tenta gerar via API (funciona em produção / vercel dev)
+      const res = await fetch('/api/generate-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-danfegen-key': DEMO_KEY,
+        },
+        body: JSON.stringify({ mode: 'single', nfeData: nfe, config }),
+      })
+
+      if (!res.ok) throw new Error(`API erro ${res.status}`)
+
+      const blob = await res.blob()
+      const file = new File([blob], pdfName, { type: 'application/pdf' })
+
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          title: `DANFE NF-e nº ${nfe.nNF}`,
+          text: `DANFE da NF-e nº ${nfe.nNF} — ${nfe.emitente.xNome}`,
+          files: [file],
+        })
+        return
+      }
+
+      if (navigator.share) {
+        await navigator.share({
+          title: `DANFE NF-e nº ${nfe.nNF}`,
+          text: `DANFE da NF-e nº ${nfe.nNF} — ${nfe.emitente.xNome}`,
+        })
+        return
+      }
+
+      // Fallback: download direto
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = pdfName
+      link.click()
+      URL.revokeObjectURL(url)
+
+    } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') return
+
+      // ← API indisponível (dev local): gera PDF via generateA4 + share de texto
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title: `DANFE NF-e nº ${nfe.nNF}`,
+            text: `DANFE da NF-e nº ${nfe.nNF} — ${nfe.emitente.xNome}`,
+          })
+        } else {
+          // Sem share: gera o PDF e baixa
+          await generateA4(nfe, config)
+        }
+      } catch {
+        // AbortError do share — silencioso
+      }
+
+    } finally {
+      setIsGenerating(false)
+    }
+  }, [nfe, config, generateA4])
+
+  /* ─── Enviar por e-mail (mailto:) ─────────────────────────── */
+  const handleEmail = useCallback(() => {
+    if (!nfe) return
+    const destinatario = nfe.destinatario?.email ?? ''
+    const assunto = encodeURIComponent(`DANFE NF-e nº ${nfe.nNF} — ${nfe.emitente.xNome}`)
+    const corpo = encodeURIComponent(
+      `Segue em anexo o DANFE referente à NF-e nº ${nfe.nNF}, série ${nfe.serie}.\n\nEmitente: ${nfe.emitente.xNome}\nData de emissão: ${formatDate(nfe.dhEmi)}\nChave: ${nfe.chNFe}`
+    )
+    window.open(`mailto:${destinatario}?subject=${assunto}&body=${corpo}`, '_blank')
+  }, [nfe])
 
   if (!nfe) return null
 
@@ -208,10 +276,11 @@ export function DanfePreview() {
         </div>
 
         {/* Ações */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
 
           <FormatSelector value={format} onChange={setFormat} />
 
+          {/* ─── Baixar PDF / Imprimir ────────────────────── */}
           <button
             type="button"
             onClick={handleGenerate}
@@ -255,6 +324,53 @@ export function DanfePreview() {
               </>
             )}
           </button>
+
+          {/* ─── Compartilhar ─────────────────────────────── */}
+          {canShare && (
+            <button
+              type="button"
+              onClick={handleShare}
+              disabled={isGenerating}
+              aria-label="Compartilhar DANFE"
+              title="Compartilhar via WhatsApp, Telegram, etc."
+              className="
+                flex items-center gap-2 px-3 py-2.5 rounded-xl
+                text-sm font-medium
+                text-surface-600 dark:text-surface-300
+                bg-surface-100 dark:bg-surface-800
+                hover:bg-surface-200 dark:hover:bg-surface-700
+                border border-surface-200 dark:border-surface-700
+                transition-colors duration-150
+                disabled:opacity-60 disabled:cursor-not-allowed
+              "
+            >
+              <Share2 aria-hidden="true" size={15} strokeWidth={2} />
+              <span className="hidden sm:inline">Compartilhar</span>
+            </button>
+          )}
+
+          {/* ─── Enviar por E-mail ─────────────────────────── */}
+          <button
+            type="button"
+            onClick={handleEmail}
+            disabled={isGenerating}
+            aria-label="Enviar DANFE por e-mail"
+            title="Abre o cliente de e-mail com os dados preenchidos"
+            className="
+              flex items-center gap-2 px-3 py-2.5 rounded-xl
+              text-sm font-medium
+              text-surface-600 dark:text-surface-300
+              bg-surface-100 dark:bg-surface-800
+              hover:bg-surface-200 dark:hover:bg-surface-700
+              border border-surface-200 dark:border-surface-700
+              transition-colors duration-150
+              disabled:opacity-60 disabled:cursor-not-allowed
+            "
+          >
+            <Mail aria-hidden="true" size={15} strokeWidth={2} />
+            <span className="hidden sm:inline">Enviar E-mail</span>
+          </button>
+
         </div>
       </div>
 
@@ -286,16 +402,16 @@ export function DanfePreview() {
       {/* ─── Seções do DANFE ──────────────────────────────────── */}
       <div role="region" aria-label="Dados da NF-e" className="space-y-3">
 
-        <IdentificacaoFields   nfe={nfe} />
-        <EmitenteFields        nfe={nfe} />
-        <DestinatarioFields    nfe={nfe} />
-        <ProdutosFields        nfe={nfe} />
-        <TotaisFields          nfe={nfe} />
+        <IdentificacaoFields nfe={nfe} />
+        <EmitenteFields nfe={nfe} />
+        <DestinatarioFields nfe={nfe} />
+        <ProdutosFields nfe={nfe} />
+        <TotaisFields nfe={nfe} />
 
         {showAllSections && (
           <>
-            <TransporteFields             nfe={nfe} />
-            <InformacoesAdicionaisFields  nfe={nfe} />
+            <TransporteFields nfe={nfe} />
+            <InformacoesAdicionaisFields nfe={nfe} />
           </>
         )}
 
@@ -350,11 +466,6 @@ export function DanfePreview() {
         </p>
       </div>
 
-      {/* ─── Etiqueta térmica ─────────────────────────────────────
-          Renderizada UMA única vez.
-          Na tela: display:none via #thermal-print-root (CSS do componente)
-          No print: @media print revela apenas #thermal-print-root
-      ──────────────────────────────────────────────────────────── */}
       {format === 'thermal' && (
         <DanfeThermal nfe={nfe} config={config} />
       )}

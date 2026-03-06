@@ -1,23 +1,73 @@
 {
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+
   "name":             "DanfeGen — Conversor NF-e para DANFE",
   "short_name":       "DanfeGen",
   "description":      "Conversor gratuito de XML NF-e para DANFE PDF e Etiqueta Térmica 80mm.",
   "start_url":        "/",
+  "scope":            "/",
   "display":          "standalone",
+  "orientation":      "any",
   "background_color": "#ffffff",
   "theme_color":      "#2563eb",
   "lang":             "pt-BR",
+  "dir":              "ltr",
+
   "icons": [
-    { "src": "/danfegen-icon.svg", "sizes": "any",     "type": "image/svg+xml", "purpose": "any maskable" }
+    {
+      "src":     "/danfegen-icon.svg",
+      "sizes":   "any",
+      "type":    "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src":     "/danfegen-icon.svg",
+      "sizes":   "any",
+      "type":    "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src":     "/danfegen-icon-192.png",
+      "sizes":   "192x192",
+      "type":    "image/png",
+      "purpose": "any"
+    },
+    {
+      "src":     "/danfegen-icon-512.png",
+      "sizes":   "512x512",
+      "type":    "image/png",
+      "purpose": "any"
+    },
+    {
+      "src":     "/danfegen-icon-512.png",
+      "sizes":   "512x512",
+      "type":    "image/png",
+      "purpose": "maskable"
+    }
   ],
-  "categories":       ["business", "productivity", "utilities"],
+
   "screenshots": [
     {
-      "src":          "/og-preview.png",
-      "sizes":        "1200x630",
-      "type":         "image/png",
-      "form_factor":  "wide",
-      "label":        "DanfeGen — Conversor NF-e para DANFE"
+      "src":         "/og-preview.png",
+      "sizes":       "1200x630",
+      "type":        "image/png",
+      "form_factor": "wide",
+      "platform":    "web",
+      "label":       "DanfeGen — Conversor NF-e para DANFE PDF"
+    }
+  ],
+
+  "categories":      ["business", "productivity", "utilities"],
+
+  "shortcuts": [
+    {
+      "name":       "Converter XML",
+      "short_name": "Converter",
+      "description": "Abre o conversor de XML NF-e",
+      "url":        "/",
+      "icons": [
+        { "src": "/danfegen-icon-192.png", "sizes": "192x192" }
+      ]
     }
   ]
 }

@@ -3,28 +3,28 @@ import {
   Rect, Image,
   StyleSheet, Font,
   type Styles,
-}  from '@react-pdf/renderer'
-import type { NFeDados }        from '@/types/nfe.types'
-import type { CompanyConfig }   from '@/types/company.types'
+} from '@react-pdf/renderer'
+import type { NFeDados } from '@/types/nfe.types'
+import type { CompanyConfig } from '@/types/company.types'
 import {
-  formatCurrency, formatNumber,  formatQuantity,
-  formatDate,     formatDateTime, formatAccessKey,
-  formatModalFrete, formatCRT,    formatAmbiente,
-  formatTipoNFe,  formatFinalidade,
-}                               from '@/utils/formatters'
+  formatCurrency, formatNumber, formatQuantity,
+  formatDate, formatDateTime, formatAccessKey,
+  formatModalFrete, formatCRT, formatAmbiente,
+  formatTipoNFe, formatFinalidade,
+} from '@/utils/formatters'
 import { encodeCode128C, calcBarcodeWidth } from '@/utils/code128'
-import { buildQrMatrix }        from '@/utils/qrCodeSvg'
+import { buildQrMatrix } from '@/utils/qrCodeSvg'
 import {
   PAGE, CONTENT_W, FONT, ROW_H, COLOR, BORDER,
   PRODUCT_COLS, PRODUCT_DESC_W, PRODUCTS_PER_PAGE,
-}                               from '@/utils/danfeLayout'
+} from '@/utils/danfeLayout'
 
 /* ─── Registro da fonte Inter ─────────────────────────────────── */
 Font.register({
   family: 'Inter',
   fonts: [
     { src: '/fonts/Inter-Regular.ttf', fontWeight: 400 },
-    { src: '/fonts/Inter-Bold.ttf',    fontWeight: 700 },
+    { src: '/fonts/Inter-Bold.ttf', fontWeight: 700 },
   ],
 })
 
@@ -35,124 +35,124 @@ const s = StyleSheet.create({
 
   page: {
     backgroundColor: COLOR.bg,
-    paddingTop:      PAGE.marginTop,
-    paddingRight:    PAGE.marginRight,
-    paddingBottom:   PAGE.marginBottom,
-    paddingLeft:     PAGE.marginLeft,
-    fontFamily:      'Inter',
-    fontSize:        FONT.value,
-    color:           COLOR.value,
+    paddingTop: PAGE.marginTop,
+    paddingRight: PAGE.marginRight,
+    paddingBottom: PAGE.marginBottom,
+    paddingLeft: PAGE.marginLeft,
+    fontFamily: 'Inter',
+    fontSize: FONT.value,
+    color: COLOR.value,
   },
 
-  row:  { flexDirection: 'row' },
-  col:  { flexDirection: 'column' },
+  row: { flexDirection: 'row' },
+  col: { flexDirection: 'column' },
   flex: { flex: 1 },
 
   cell: {
-    borderTopWidth:    BORDER.thin,
-    borderRightWidth:  BORDER.thin,
+    borderTopWidth: BORDER.thin,
+    borderRightWidth: BORDER.thin,
     borderBottomWidth: BORDER.thin,
-    borderLeftWidth:   BORDER.thin,
-    borderColor:       COLOR.border,
-    borderStyle:       'solid',
-    padding:           2,
+    borderLeftWidth: BORDER.thin,
+    borderColor: COLOR.border,
+    borderStyle: 'solid',
+    padding: 2,
   },
 
-  cellNoTop:   { borderTopWidth:   0 },
-  cellNoLeft:  { borderLeftWidth:  0 },
+  cellNoTop: { borderTopWidth: 0 },
+  cellNoLeft: { borderLeftWidth: 0 },
   cellNoRight: { borderRightWidth: 0 },
 
   label: {
-    fontSize:     FONT.label,
-    color:        COLOR.label,
+    fontSize: FONT.label,
+    color: COLOR.label,
     marginBottom: 1,
   },
   value: {
-    fontSize:   FONT.value,
-    color:      COLOR.value,
+    fontSize: FONT.value,
+    color: COLOR.value,
     fontWeight: 400,
   },
   valueBold: {
-    fontSize:   FONT.value,
-    color:      COLOR.value,
+    fontSize: FONT.value,
+    color: COLOR.value,
     fontWeight: 700,
   },
   title: {
-    fontSize:   FONT.title,
+    fontSize: FONT.title,
     fontWeight: 700,
-    color:      COLOR.value,
-    textAlign:  'center',
+    color: COLOR.value,
+    textAlign: 'center',
   },
 
   sectionHeader: {
-    backgroundColor:   COLOR.bgSection,
-    paddingVertical:   2,
+    backgroundColor: COLOR.bgSection,
+    paddingVertical: 2,
     paddingHorizontal: 3,
-    borderTopWidth:    BORDER.thin,
-    borderRightWidth:  BORDER.thin,
+    borderTopWidth: BORDER.thin,
+    borderRightWidth: BORDER.thin,
     borderBottomWidth: BORDER.thin,
-    borderLeftWidth:   BORDER.thin,
-    borderColor:       COLOR.border,
-    borderStyle:       'solid',
+    borderLeftWidth: BORDER.thin,
+    borderColor: COLOR.border,
+    borderStyle: 'solid',
   },
   sectionHeaderText: {
-    fontSize:      FONT.label,
-    fontWeight:    700,
-    color:         COLOR.value,
+    fontSize: FONT.label,
+    fontWeight: 700,
+    color: COLOR.value,
     textTransform: 'uppercase',
   },
 
   tableHeader: {
-    backgroundColor:   COLOR.bgSection,
-    flexDirection:     'row',
-    borderTopWidth:    0,
-    borderRightWidth:  BORDER.thin,
+    backgroundColor: COLOR.bgSection,
+    flexDirection: 'row',
+    borderTopWidth: 0,
+    borderRightWidth: BORDER.thin,
     borderBottomWidth: BORDER.thin,
-    borderLeftWidth:   BORDER.thin,
-    borderColor:       COLOR.border,
-    borderStyle:       'solid',
+    borderLeftWidth: BORDER.thin,
+    borderColor: COLOR.border,
+    borderStyle: 'solid',
   },
   tableCell: {
-    fontSize:          FONT.label,
-    paddingVertical:   2,
+    fontSize: FONT.label,
+    paddingVertical: 2,
     paddingHorizontal: 2,
-    borderRightWidth:  BORDER.thin,
-    borderColor:       COLOR.border,
-    borderStyle:       'solid',
+    borderRightWidth: BORDER.thin,
+    borderColor: COLOR.border,
+    borderStyle: 'solid',
   },
   tableRow: {
-    flexDirection:     'row',
-    borderTopWidth:    0,
-    borderRightWidth:  BORDER.thin,
+    flexDirection: 'row',
+    borderTopWidth: 0,
+    borderRightWidth: BORDER.thin,
     borderBottomWidth: BORDER.thin,
-    borderLeftWidth:   BORDER.thin,
-    borderColor:       COLOR.border,
-    borderStyle:       'solid',
+    borderLeftWidth: BORDER.thin,
+    borderColor: COLOR.border,
+    borderStyle: 'solid',
   },
   tableRowAlt: {
     backgroundColor: '#f8f8f8',
   },
 
   chaveBox: {
-    borderTopWidth:    0,
-    borderRightWidth:  BORDER.thin,
+    borderTopWidth: 0,
+    borderRightWidth: BORDER.thin,
     borderBottomWidth: BORDER.thin,
-    borderLeftWidth:   BORDER.thin,
-    borderColor:       COLOR.border,
-    borderStyle:       'solid',
-    padding:           3,
-    marginTop:         0,
-    alignItems:        'center',
+    borderLeftWidth: BORDER.thin,
+    borderColor: COLOR.border,
+    borderStyle: 'solid',
+    padding: 3,
+    marginTop: 0,
+    alignItems: 'center',
   },
 
   watermark: {
-    position:   'absolute',
-    top:        '40%',
-    left:       0,
-    right:      0,
-    textAlign:  'center',
-    fontSize:   48,
-    color:      'rgba(200,0,0,0.08)',
+    position: 'absolute',
+    top: '40%',
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    fontSize: 48,
+    color: 'rgba(200,0,0,0.08)',
     fontWeight: 700,
   },
 })
@@ -162,14 +162,14 @@ const s = StyleSheet.create({
    ============================================================ */
 
 interface CellProps {
-  label:   string
-  value:   string | number | undefined | null
-  width?:  number | string
-  flex?:   number
-  style?:  Styles[string]
-  bold?:   boolean
+  label: string
+  value: string | number | undefined | null
+  width?: number | string
+  flex?: number
+  style?: Styles[string]
+  bold?: boolean
   noLeft?: boolean
-  noTop?:  boolean
+  noTop?: boolean
 }
 
 function Cell({ label, value, width, flex, style, bold, noLeft, noTop }: CellProps) {
@@ -178,9 +178,9 @@ function Cell({ label, value, width, flex, style, bold, noLeft, noTop }: CellPro
     <View style={[
       s.cell,
       noLeft ? s.cellNoLeft : {},
-      noTop  ? s.cellNoTop  : {},
+      noTop ? s.cellNoTop : {},
       width !== undefined ? { width } : {},
-      flex  !== undefined ? { flex  } : {},
+      flex !== undefined ? { flex } : {},
       ...(style ? [style] : []),   // ← spread condicional evita {} vazio
     ]}>
       <Text style={s.label}>{label}</Text>
@@ -199,10 +199,10 @@ function SectionHeader({ title }: { title: string }) {
 
 /* ─── Code 128 SVG ────────────────────────────────────────────── */
 function Barcode128({ digits, height = 24 }: { digits: string; height?: number }) {
-  const bars   = encodeCode128C(digits)
+  const bars = encodeCode128C(digits)
   const totalW = calcBarcodeWidth(bars)
-  const scale  = CONTENT_W / totalW
-  let   x      = 0
+  const scale = CONTENT_W / totalW
+  let x = 0
 
   return (
     <View style={{ alignItems: 'center', marginTop: 3 }}>
@@ -242,7 +242,7 @@ function QrCode({ data, size = 56 }: { data: string; size?: number }) {
             <Rect
               key={`${r}-${c}`}
               x={c * cellSize} y={r * cellSize}
-              width={cellSize}  height={cellSize}
+              width={cellSize} height={cellSize}
               fill={COLOR.black}
             />
           ) : null
@@ -265,13 +265,13 @@ function ProdutosTable({
       {showHeader && (
         <View style={s.tableHeader}>
           {([
-            { label: 'Cód.',      w: PRODUCT_COLS.code  },
-            { label: 'Descrição', w: PRODUCT_DESC_W     },
-            { label: 'NCM/SH',   w: PRODUCT_COLS.ncm   },
-            { label: 'CST',      w: PRODUCT_COLS.cst   },
-            { label: 'CFOP',     w: PRODUCT_COLS.cfop  },
-            { label: 'Un.',      w: PRODUCT_COLS.unit  },
-            { label: 'Qtd.',     w: PRODUCT_COLS.qty   },
+            { label: 'Cód.', w: PRODUCT_COLS.code },
+            { label: 'Descrição', w: PRODUCT_DESC_W },
+            { label: 'NCM/SH', w: PRODUCT_COLS.ncm },
+            { label: 'CST', w: PRODUCT_COLS.cst },
+            { label: 'CFOP', w: PRODUCT_COLS.cfop },
+            { label: 'Un.', w: PRODUCT_COLS.unit },
+            { label: 'Qtd.', w: PRODUCT_COLS.qty },
             { label: 'Vl.Unit.', w: PRODUCT_COLS.vUnit },
             { label: 'Vl.Total', w: PRODUCT_COLS.vTotal },
           ] as const).map((col, i) => (
@@ -294,15 +294,15 @@ function ProdutosTable({
           style={[s.tableRow, (startIdx + i) % 2 === 1 ? s.tableRowAlt : {}]}
           wrap={false}
         >
-          <Text style={[s.tableCell, { width: PRODUCT_COLS.code,   fontSize: FONT.small }]}>{p.cProd}</Text>
+          <Text style={[s.tableCell, { width: PRODUCT_COLS.code, fontSize: FONT.small }]}>{p.cProd}</Text>
           {/* ↓ numberOfLines não existe no react-pdf — usa maxLines ou remove */}
-          <Text style={[s.tableCell, { width: PRODUCT_DESC_W,      fontSize: FONT.small }]}>{p.xProd}</Text>
-          <Text style={[s.tableCell, { width: PRODUCT_COLS.ncm,    fontSize: FONT.small, textAlign: 'center' }]}>{p.NCM}</Text>
-          <Text style={[s.tableCell, { width: PRODUCT_COLS.cst,    fontSize: FONT.small, textAlign: 'center' }]}>{p.CST ?? p.CSOSN ?? '—'}</Text>
-          <Text style={[s.tableCell, { width: PRODUCT_COLS.cfop,   fontSize: FONT.small, textAlign: 'center' }]}>{p.CFOP}</Text>
-          <Text style={[s.tableCell, { width: PRODUCT_COLS.unit,   fontSize: FONT.small, textAlign: 'center' }]}>{p.uCom}</Text>
-          <Text style={[s.tableCell, { width: PRODUCT_COLS.qty,    fontSize: FONT.small, textAlign: 'right'  }]}>{formatQuantity(p.qCom)}</Text>
-          <Text style={[s.tableCell, { width: PRODUCT_COLS.vUnit,  fontSize: FONT.small, textAlign: 'right'  }]}>{formatNumber(p.vUnCom)}</Text>
+          <Text style={[s.tableCell, { width: PRODUCT_DESC_W, fontSize: FONT.small }]}>{p.xProd}</Text>
+          <Text style={[s.tableCell, { width: PRODUCT_COLS.ncm, fontSize: FONT.small, textAlign: 'center' }]}>{p.NCM}</Text>
+          <Text style={[s.tableCell, { width: PRODUCT_COLS.cst, fontSize: FONT.small, textAlign: 'center' }]}>{p.CST ?? p.CSOSN ?? '—'}</Text>
+          <Text style={[s.tableCell, { width: PRODUCT_COLS.cfop, fontSize: FONT.small, textAlign: 'center' }]}>{p.CFOP}</Text>
+          <Text style={[s.tableCell, { width: PRODUCT_COLS.unit, fontSize: FONT.small, textAlign: 'center' }]}>{p.uCom}</Text>
+          <Text style={[s.tableCell, { width: PRODUCT_COLS.qty, fontSize: FONT.small, textAlign: 'right' }]}>{formatQuantity(p.qCom)}</Text>
+          <Text style={[s.tableCell, { width: PRODUCT_COLS.vUnit, fontSize: FONT.small, textAlign: 'right' }]}>{formatNumber(p.vUnCom)}</Text>
           <Text style={[s.tableCell, { width: PRODUCT_COLS.vTotal, fontSize: FONT.small, textAlign: 'right', borderRightWidth: 0, fontWeight: 700 }]}>{formatCurrency(p.vProd)}</Text>
         </View>
       ))}
@@ -314,16 +314,16 @@ function ProdutosTable({
 function TotaisBlock({ nfe }: { nfe: NFeDados }) {
   const t = nfe.totais
   const rows = [
-    { label: 'Valor dos Produtos', value: formatCurrency(t.vProd)        },
-    { label: 'Valor do Frete',     value: formatCurrency(t.vFrete ?? 0)  },
-    { label: 'Valor do Seguro',    value: formatCurrency(t.vSeg   ?? 0)  },
-    { label: 'Desconto',           value: formatCurrency(t.vDesc  ?? 0)  },
-    { label: 'Outras Despesas',    value: '—'                            },
-    { label: 'Valor do IPI',       value: formatCurrency(t.vIPI   ?? 0)  },
-    { label: 'BC do ICMS',         value: formatCurrency(t.vBC)          },
-    { label: 'Valor do ICMS',      value: formatCurrency(t.vICMS)        },
-    { label: 'PIS',                value: formatCurrency(t.vPIS)         },
-    { label: 'COFINS',             value: formatCurrency(t.vCOFINS)      },
+    { label: 'Valor dos Produtos', value: formatCurrency(t.vProd) },
+    { label: 'Valor do Frete', value: formatCurrency(t.vFrete ?? 0) },
+    { label: 'Valor do Seguro', value: formatCurrency(t.vSeg ?? 0) },
+    { label: 'Desconto', value: formatCurrency(t.vDesc ?? 0) },
+    { label: 'Outras Despesas', value: '—' },
+    { label: 'Valor do IPI', value: formatCurrency(t.vIPI ?? 0) },
+    { label: 'BC do ICMS', value: formatCurrency(t.vBC) },
+    { label: 'Valor do ICMS', value: formatCurrency(t.vICMS) },
+    { label: 'PIS', value: formatCurrency(t.vPIS) },
+    { label: 'COFINS', value: formatCurrency(t.vCOFINS) },
   ]
   return (
     <View>
@@ -334,25 +334,25 @@ function TotaisBlock({ nfe }: { nfe: NFeDados }) {
         ))}
       </View>
       <View style={{
-        flexDirection:     'row',
-        borderTopWidth:    0,
-        borderRightWidth:  BORDER.thin,
+        flexDirection: 'row',
+        borderTopWidth: 0,
+        borderRightWidth: BORDER.thin,
         borderBottomWidth: BORDER.thin,
-        borderLeftWidth:   BORDER.thin,
-        borderColor:       COLOR.border,
-        borderStyle:       'solid',
+        borderLeftWidth: BORDER.thin,
+        borderColor: COLOR.border,
+        borderStyle: 'solid',
       }}>
         <View style={{ flex: 1 }} />
         <View style={{
-          width:             100,
-          borderTopWidth:    0,
-          borderRightWidth:  0,
+          width: 100,
+          borderTopWidth: 0,
+          borderRightWidth: 0,
           borderBottomWidth: 0,
-          borderLeftWidth:   BORDER.thin,
-          borderColor:       COLOR.border,
-          borderStyle:       'solid',
-          padding:           2,
-          alignItems:        'flex-end',
+          borderLeftWidth: BORDER.thin,
+          borderColor: COLOR.border,
+          borderStyle: 'solid',
+          padding: 2,
+          alignItems: 'flex-end',
         }}>
           <Text style={s.label}>VALOR TOTAL DA NF-e</Text>
           <Text style={[s.valueBold, { fontSize: 9 }]}>{formatCurrency(t.vNF)}</Text>
@@ -381,24 +381,24 @@ function TransporteBlock({ nfe }: { nfe: NFeDados }) {
     <View>
       <SectionHeader title="Transportador / Volumes Transportados" />
       <View style={s.row}>
-        <Cell label="Razão Social"     value={tr.xNome}                      flex={3}           />
-        <Cell label="Frete por Conta"  value={formatModalFrete(tr.modFrete)} flex={2} noLeft    />
-        <Cell label="Código ANTT"      value="—"                             flex={1} noLeft    />
-        <Cell label="Placa do Veículo" value={tr.placa ?? '—'}               flex={1} noLeft    />
-        <Cell label="UF"               value={tr.UF}                         width={20} noLeft  />
-        <Cell label="CNPJ / CPF"       value={tr.CNPJ}                       flex={2} noLeft    />
+        <Cell label="Razão Social" value={tr.xNome} flex={3} />
+        <Cell label="Frete por Conta" value={formatModalFrete(tr.modFrete)} flex={2} noLeft />
+        <Cell label="Código ANTT" value="—" flex={1} noLeft />
+        <Cell label="Placa do Veículo" value={tr.placa ?? '—'} flex={1} noLeft />
+        <Cell label="UF" value={tr.UF} width={20} noLeft />
+        <Cell label="CNPJ / CPF" value={tr.CNPJ} flex={2} noLeft />
       </View>
       <View style={s.row}>
-        <Cell label="Endereço"   value={tr.xEnder}  flex={3} noTop                              />
-        <Cell label="Município"  value={tr.xMun}    flex={2} noLeft noTop                       />
-        <Cell label="UF"         value={tr.UF}      width={20} noLeft noTop                     />
-        <Cell label="IE"         value={tr.IE}      flex={1} noLeft noTop                       />
-        <Cell label="Qtde"       value={tr.qVol}    flex={1} noLeft noTop                       />
-        <Cell label="Espécie"    value={tr.esp}     flex={1} noLeft noTop                       />
-        <Cell label="Marca"      value={tr.marca ?? '—'} flex={1} noLeft noTop                 />
-        <Cell label="Numeração"  value="—"          flex={1} noLeft noTop                       />
+        <Cell label="Endereço" value={tr.xEnder} flex={3} noTop />
+        <Cell label="Município" value={tr.xMun} flex={2} noLeft noTop />
+        <Cell label="UF" value={tr.UF} width={20} noLeft noTop />
+        <Cell label="IE" value={tr.IE} flex={1} noLeft noTop />
+        <Cell label="Qtde" value={tr.qVol} flex={1} noLeft noTop />
+        <Cell label="Espécie" value={tr.esp} flex={1} noLeft noTop />
+        <Cell label="Marca" value={tr.marca ?? '—'} flex={1} noLeft noTop />
+        <Cell label="Numeração" value="—" flex={1} noLeft noTop />
         <Cell label="Peso Bruto" value={tr.pesoB ? formatNumber(tr.pesoB, 3) : '—'} flex={1} noLeft noTop />
-        <Cell label="Peso Líq."  value={tr.pesoL ? formatNumber(tr.pesoL, 3) : '—'} flex={1} noLeft noTop />
+        <Cell label="Peso Líq." value={tr.pesoL ? formatNumber(tr.pesoL, 3) : '—'} flex={1} noLeft noTop />
       </View>
     </View>
   )
@@ -434,13 +434,13 @@ function DanfeHeader({
   return (
     <View>
       <View style={{
-        flexDirection:     'row',
-        borderTopWidth:    BORDER.thin,
-        borderRightWidth:  BORDER.thin,
+        flexDirection: 'row',
+        borderTopWidth: BORDER.thin,
+        borderRightWidth: BORDER.thin,
         borderBottomWidth: BORDER.thin,
-        borderLeftWidth:   BORDER.thin,
-        borderColor:       COLOR.border,
-        borderStyle:       'solid',
+        borderLeftWidth: BORDER.thin,
+        borderColor: COLOR.border,
+        borderStyle: 'solid',
       }}>
         <View style={{ width: 140, padding: 4, justifyContent: 'center', alignItems: 'center' }}>
           {config.showLogo && config.logoUrl ? (
@@ -454,17 +454,17 @@ function DanfeHeader({
         </View>
 
         <View style={{
-          flex:              1,
-          borderLeftWidth:   BORDER.thin,
-          borderRightWidth:  BORDER.thin,
-          borderTopWidth:    0,
+          flex: 1,
+          borderLeftWidth: BORDER.thin,
+          borderRightWidth: BORDER.thin,
+          borderTopWidth: 0,
           borderBottomWidth: 0,
-          borderColor:       COLOR.border,
-          borderStyle:       'solid',
-          padding:           4,
-          alignItems:        'center',
-          justifyContent:    'center',
-          gap:               2,
+          borderColor: COLOR.border,
+          borderStyle: 'solid',
+          padding: 4,
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 2,
         }}>
           <Text style={[s.title, { fontSize: 10 }]}>DANFE</Text>
           <Text style={[s.value, { textAlign: 'center', fontSize: 6 }]}>
@@ -481,15 +481,15 @@ function DanfeHeader({
             </View>
           </View>
           <View style={{
-            borderTopWidth:    BORDER.thin,
-            borderRightWidth:  BORDER.thin,
+            borderTopWidth: BORDER.thin,
+            borderRightWidth: BORDER.thin,
             borderBottomWidth: BORDER.thin,
-            borderLeftWidth:   BORDER.thin,
-            borderColor:       COLOR.border,
-            borderStyle:       'solid',
+            borderLeftWidth: BORDER.thin,
+            borderColor: COLOR.border,
+            borderStyle: 'solid',
             paddingHorizontal: 8,
-            paddingVertical:   2,
-            marginTop:         2,
+            paddingVertical: 2,
+            marginTop: 2,
           }}>
             <Text style={[s.valueBold, { fontSize: 8 }]}>
               {nfe.tpNF === '0' ? '0' : '1'}
@@ -514,13 +514,13 @@ function DanfeHeader({
       </View>
 
       <View style={{
-        flexDirection:     'row',
-        borderTopWidth:    0,
-        borderRightWidth:  BORDER.thin,
+        flexDirection: 'row',
+        borderTopWidth: 0,
+        borderRightWidth: BORDER.thin,
         borderBottomWidth: BORDER.thin,
-        borderLeftWidth:   BORDER.thin,
-        borderColor:       COLOR.border,
-        borderStyle:       'solid',
+        borderLeftWidth: BORDER.thin,
+        borderColor: COLOR.border,
+        borderStyle: 'solid',
       }}>
         <View style={{ flex: 1, padding: 3 }}>
           <Text style={s.label}>Emitente</Text>
@@ -529,34 +529,34 @@ function DanfeHeader({
           {e.fone && <Text style={s.value}>Fone: {e.fone}</Text>}
         </View>
         <View style={{
-          width:             120,
-          borderTopWidth:    0,
-          borderRightWidth:  0,
+          width: 120,
+          borderTopWidth: 0,
+          borderRightWidth: 0,
           borderBottomWidth: 0,
-          borderLeftWidth:   BORDER.thin,
-          borderColor:       COLOR.border,
-          borderStyle:       'solid',
-          padding:           3,
-          gap:               3,
+          borderLeftWidth: BORDER.thin,
+          borderColor: COLOR.border,
+          borderStyle: 'solid',
+          padding: 3,
+          gap: 3,
         }}>
-          <Cell label="CNPJ" value={e.CNPJ}           />
-          <Cell label="IE"   value={e.IE}   noTop     />
-          <Cell label="CRT"  value={formatCRT(e.CRT)} noTop />
+          <Cell label="CNPJ" value={e.CNPJ} />
+          <Cell label="IE" value={e.IE} noTop />
+          <Cell label="CRT" value={formatCRT(e.CRT)} noTop />
         </View>
       </View>
 
       <View style={{
-        flexDirection:     'row',
-        borderTopWidth:    0,
-        borderRightWidth:  BORDER.thin,
+        flexDirection: 'row',
+        borderTopWidth: 0,
+        borderRightWidth: BORDER.thin,
         borderBottomWidth: BORDER.thin,
-        borderLeftWidth:   BORDER.thin,
-        borderColor:       COLOR.border,
-        borderStyle:       'solid',
+        borderLeftWidth: BORDER.thin,
+        borderColor: COLOR.border,
+        borderStyle: 'solid',
       }}>
-        <Cell label="Natureza da Operação"     value={nfe.natOp}                 flex={2}          />
-        <Cell label="Protocolo de Autorização" value="(ver SEFAZ)"               flex={2} noLeft   />
-        <Cell label="Data e Hora de Emissão"   value={formatDateTime(nfe.dhEmi)} width={90} noLeft />
+        <Cell label="Natureza da Operação" value={nfe.natOp} flex={2} />
+        <Cell label="Protocolo de Autorização" value="(ver SEFAZ)" flex={2} noLeft />
+        <Cell label="Data e Hora de Emissão" value={formatDateTime(nfe.dhEmi)} width={90} noLeft />
       </View>
 
       <View style={s.chaveBox}>
@@ -566,15 +566,15 @@ function DanfeHeader({
 
       {nfe.tpAmb === '2' && (
         <View style={{
-          borderTopWidth:    0,
-          borderRightWidth:  BORDER.thin,
+          borderTopWidth: 0,
+          borderRightWidth: BORDER.thin,
           borderBottomWidth: BORDER.thin,
-          borderLeftWidth:   BORDER.thin,
-          borderColor:       '#cc0000',
-          borderStyle:       'solid',
-          backgroundColor:   '#fff0f0',
-          padding:           3,
-          alignItems:        'center',
+          borderLeftWidth: BORDER.thin,
+          borderColor: '#cc0000',
+          borderStyle: 'solid',
+          backgroundColor: '#fff0f0',
+          padding: 3,
+          alignItems: 'center',
         }}>
           <Text style={[s.valueBold, { color: '#cc0000', fontSize: 7 }]}>
             SEM VALOR FISCAL — AMBIENTE DE HOMOLOGAÇÃO
@@ -592,16 +592,16 @@ function DestinatarioBlock({ nfe }: { nfe: NFeDados }) {
     <View style={{ marginTop: 2 }}>
       <SectionHeader title="Destinatário / Remetente" />
       <View style={s.row}>
-        <Cell label="Nome / Razão Social"   value={d.xNome}                                        flex={3}          />
-        <Cell label="CNPJ / CPF"            value={d.CNPJ ?? d.CPF}                                flex={2} noLeft   />
-        <Cell label="Data de Saída/Entrada" value={nfe.dhSaiEnt ? formatDate(nfe.dhSaiEnt) : '—'}  width={70} noLeft />
+        <Cell label="Nome / Razão Social" value={d.xNome} flex={3} />
+        <Cell label="CNPJ / CPF" value={d.CNPJ ?? d.CPF} flex={2} noLeft />
+        <Cell label="Data de Saída/Entrada" value={nfe.dhSaiEnt ? formatDate(nfe.dhSaiEnt) : '—'} width={70} noLeft />
       </View>
       <View style={s.row}>
-        <Cell label="Endereço"   value={`${d.xLgr}, ${d.nro} — ${d.xBairro}`} flex={3} noTop        />
-        <Cell label="Município"  value={d.xMun}  flex={2} noLeft noTop                              />
-        <Cell label="UF"         value={d.UF}    width={20} noLeft noTop                            />
-        <Cell label="CEP"        value={d.CEP}   flex={1} noLeft noTop                              />
-        <Cell label="Fone / Fax" value={d.fone}  flex={1} noLeft noTop                              />
+        <Cell label="Endereço" value={`${d.xLgr}, ${d.nro} — ${d.xBairro}`} flex={3} noTop />
+        <Cell label="Município" value={d.xMun} flex={2} noLeft noTop />
+        <Cell label="UF" value={d.UF} width={20} noLeft noTop />
+        <Cell label="CEP" value={d.CEP} flex={1} noLeft noTop />
+        <Cell label="Fone / Fax" value={d.fone} flex={1} noLeft noTop />
       </View>
     </View>
   )
@@ -612,23 +612,23 @@ function DanfeFooter({ nfe }: { nfe: NFeDados & { qrCode?: string } }) {
   const hasQR = !!(nfe as unknown as { qrCode?: string }).qrCode
 
   // ── casts para satisfazer os tipos das funções de formatação ──
-  const tpAmb   = (nfe.tpAmb  ?? '1') as '1' | '2'
-  const tpNF    = (nfe.tpNF   ?? '1') as '0' | '1'
-  const finNFe  =  nfe.finNFe ?? '1'
+  const tpAmb = (nfe.tpAmb ?? '1') as '1' | '2'
+  const tpNF = (nfe.tpNF ?? '1') as '0' | '1'
+  const finNFe = nfe.finNFe ?? '1'
 
   return (
     <View style={{
-      marginTop:         4,
-      borderTopWidth:    BORDER.thin,
-      borderRightWidth:  BORDER.thin,
+      marginTop: 4,
+      borderTopWidth: BORDER.thin,
+      borderRightWidth: BORDER.thin,
       borderBottomWidth: BORDER.thin,
-      borderLeftWidth:   BORDER.thin,
-      borderColor:       COLOR.border,
-      borderStyle:       'solid',
-      flexDirection:     'row',
-      alignItems:        'center',
-      padding:           4,
-      gap:               8,
+      borderLeftWidth: BORDER.thin,
+      borderColor: COLOR.border,
+      borderStyle: 'solid',
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 4,
+      gap: 8,
     }}>
       {hasQR && (
         <View style={{ alignItems: 'center', gap: 2 }}>
@@ -668,7 +668,7 @@ function DanfeFooter({ nfe }: { nfe: NFeDados & { qrCode?: string } }) {
    Documento principal
    ============================================================ */
 interface DanfeA4Props {
-  nfe:    NFeDados
+  nfe: NFeDados
   config: CompanyConfig
 }
 
@@ -684,7 +684,7 @@ export function DanfeA4({ nfe, config }: DanfeA4Props) {
 
   return (
     <Document
-      title={`DANFE NF-e ${String(nfe.nNF).padStart(9,'0')}-${nfe.serie}`}
+      title={`DANFE NF-e ${String(nfe.nNF).padStart(9, '0')}-${nfe.serie}`}
       author={config.name || nfe.emitente.xNome}
       creator="DanfeGen"
       producer="DanfeGen — @react-pdf/renderer"
@@ -694,7 +694,7 @@ export function DanfeA4({ nfe, config }: DanfeA4Props) {
       {chunks.map((chunk, pageIdx) => (
         <Page key={pageIdx} size="A4" style={s.page} wrap>
 
-          {(config.showWatermark || nfe.tpAmb === '2') && (
+          {nfe.tpAmb === '2' && (
             <Text style={s.watermark} fixed>SEM VALOR FISCAL</Text>
           )}
 
@@ -714,10 +714,10 @@ export function DanfeA4({ nfe, config }: DanfeA4Props) {
 
           {pageIdx === totalPages - 1 && (
             <>
-              <TotaisBlock     nfe={nfe} />
+              <TotaisBlock nfe={nfe} />
               <TransporteBlock nfe={nfe} />
-              <InfAdicBlock    nfe={nfe} />
-              <DanfeFooter     nfe={nfe as NFeDados & { qrCode?: string }} />
+              <InfAdicBlock nfe={nfe} />
+              <DanfeFooter nfe={nfe as NFeDados & { qrCode?: string }} />
             </>
           )}
 

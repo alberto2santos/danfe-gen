@@ -67,7 +67,7 @@ export default defineConfig(({ mode }) => {
       sourcemap:            mode === 'development',
       chunkSizeWarningLimit: 500,
 
-      // ✅ Converte pacotes CJS mistos para ESM (resolve base64-js)
+      // Converte pacotes CJS mistos para ESM (resolve base64-js)
       commonjsOptions: {
         transformMixedEsModules: true,
       },
@@ -113,11 +113,10 @@ export default defineConfig(({ mode }) => {
     optimizeDeps: {
       include: [
         'fast-xml-parser',
-        // ✅ Força pre-bundle do react-pdf e dependências CJS
+        // Força pre-bundle do react-pdf e dependências CJS
         '@react-pdf/renderer',
         'base64-js',
       ],
-      // ❌ exclude removido — era a causa do erro base64-js
     },
 
   }

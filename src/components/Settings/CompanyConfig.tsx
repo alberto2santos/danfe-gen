@@ -9,10 +9,15 @@ import {
   X, Upload, RotateCcw,
   Download, FolderOpen,
   Building2, Palette,
-  Plug, Save,
+  Plug, Save, Mail,
+  ToggleLeft, ToggleRight,
 }                                from 'lucide-react'
 import { useCompany }            from '@/contexts/CompanyContext'
-import type { CompanyConfig as CompanyConfigType, ErpProvider, LogoPosition } from '@/types/company.types'
+import type {
+  CompanyConfig as CompanyConfigType,
+  ErpProvider,
+  LogoPosition,
+}                                from '@/types/company.types'
 import { isValidCNPJ }           from '@/utils/cnpjValidator'
 import { formatCNPJ }            from '@/utils/formatters'
 
@@ -46,14 +51,15 @@ const PRESET_COLORS = [
 
 /* ─── Sub-componente: campo de formulário ─────────────────────── */
 interface FormFieldProps {
-  label:       string
-  htmlFor:     string
-  required?:   boolean
-  error?:      string | null
-  children:    React.ReactNode
+  label:     string
+  htmlFor:   string
+  required?: boolean
+  error?:    string | null
+  hint?:     string
+  children:  React.ReactNode
 }
 
-function FormField({ label, htmlFor, required, error, children }: FormFieldProps) {
+function FormField({ label, htmlFor, required, error, hint, children }: FormFieldProps) {
   return (
     <div className="flex flex-col gap-1.5">
       <label
@@ -66,6 +72,11 @@ function FormField({ label, htmlFor, required, error, children }: FormFieldProps
         )}
       </label>
       {children}
+      {hint && !error && (
+        <p className="text-[10px] text-surface-400 dark:text-surface-500">
+          {hint}
+        </p>
+      )}
       {error && (
         <p role="alert" className="text-xs text-danger-600 dark:text-danger-400">
           {error}
@@ -75,7 +86,7 @@ function FormField({ label, htmlFor, required, error, children }: FormFieldProps
   )
 }
 
-/* ─── Sub-componente: input base ─────────────────────────────────*/
+/* ─── Sub-componente: input base ──────────────────────────────── */
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   hasError?: boolean
 }
@@ -104,7 +115,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   }
 )
 
-Input.displayName = 'Input' 
+Input.displayName = 'Input'
 
 /* ─── Sub-componente: textarea base ──────────────────────────────*/
 function Textarea({ className = '', ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
@@ -123,6 +134,52 @@ function Textarea({ className = '', ...props }: React.TextareaHTMLAttributes<HTM
         ${className}
       `}
     />
+  )
+}
+
+/* ─── Sub-componente: toggle switch ──────────────────────────────*/
+interface ToggleSwitchProps {
+  id:       string
+  checked:  boolean
+  onChange: (checked: boolean) => void
+  label:    string
+}
+
+function ToggleSwitch({ id, checked, onChange, label }: ToggleSwitchProps) {
+  return (
+    <label
+      htmlFor={id}
+      className="flex items-center justify-between cursor-pointer group"
+    >
+      <span className="text-sm text-surface-700 dark:text-surface-300 group-hover:text-surface-900 dark:group-hover:text-surface-100 transition-colors">
+        {label}
+      </span>
+      <div className="relative">
+        <input
+          id={id}
+          type="checkbox"
+          checked={checked}
+          onChange={e => onChange(e.target.checked)}
+          className="sr-only"
+        />
+        <div
+          className={`
+            w-10 h-5 rounded-full transition-colors duration-200
+            ${checked
+              ? 'bg-brand-600 dark:bg-brand-500'
+              : 'bg-surface-200 dark:bg-surface-700'}
+          `}
+        />
+        <div
+          className={`
+            absolute top-0.5 left-0.5
+            w-4 h-4 rounded-full bg-white shadow-sm
+            transition-transform duration-200
+            ${checked ? 'translate-x-5' : 'translate-x-0'}
+          `}
+        />
+      </div>
+    </label>
   )
 }
 
@@ -158,7 +215,6 @@ export function CompanyConfig({ open, onClose }: CompanyConfigProps) {
   /* ─── Foco inicial quando drawer abre ──────────────────────── */
   useEffect(() => {
     if (open) {
-      // Delay mínimo para a transição CSS terminar
       const t = setTimeout(() => firstFocusRef.current?.focus(), 150)
       return () => clearTimeout(t)
     }
@@ -178,7 +234,7 @@ export function CompanyConfig({ open, onClose }: CompanyConfigProps) {
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [open] as const)
+  }, [open])
 
   /* ─── Handler de upload de logo ─────────────────────────────── */
   const handleLogoUpload = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -232,12 +288,34 @@ export function CompanyConfig({ open, onClose }: CompanyConfigProps) {
 
   /* ─── Handler CNPJ com máscara ──────────────────────────────── */
   const handleCNPJChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const raw     = e.target.value.replace(/\D/g, '').slice(0, 14)
-    const masked  = raw.length === 14 ? formatCNPJ(raw) : e.target.value
+    const raw    = e.target.value.replace(/\D/g, '').slice(0, 14)
+    const masked = raw.length === 14 ? formatCNPJ(raw) : e.target.value
     updateConfig({ cnpj: masked })
   }, [updateConfig])
 
-  /* ─── Não renderiza nada se fechado (mantém DOM limpo) ─────── */
+  /* ─── Helper: atualiza emailSend parcialmente ───────────────── */
+  const updateEmailSend = useCallback((
+    partial: Partial<CompanyConfigType['emailSend']>
+  ) => {
+    updateConfig({
+      emailSend: {
+        ...config.emailSend,
+        ...partial,
+      },
+    })
+  }, [config.emailSend, updateConfig])
+
+  /* ─── Validação do e-mail de envio ──────────────────────────── */
+  const fromEmailError = config.emailSend?.fromEmail
+    && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.emailSend.fromEmail)
+      ? 'E-mail inválido'
+      : null
+
+  const replyToError = config.emailSend?.replyTo
+    && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.emailSend.replyTo)
+      ? 'E-mail inválido'
+      : null
+
   if (!open) return null
 
   return (
@@ -507,7 +585,6 @@ export function CompanyConfig({ open, onClose }: CompanyConfigProps) {
               {/* Cor primária */}
               <FormField label="Cor Primária" htmlFor="cfg-color">
                 <div className="space-y-2">
-                  {/* Presets */}
                   <div
                     role="group"
                     aria-label="Cores predefinidas"
@@ -532,7 +609,6 @@ export function CompanyConfig({ open, onClose }: CompanyConfigProps) {
                     ))}
                   </div>
 
-                  {/* Input color nativo */}
                   <div className="flex items-center gap-2">
                     <input
                       id="cfg-color"
@@ -596,7 +672,185 @@ export function CompanyConfig({ open, onClose }: CompanyConfigProps) {
               </div>
             </DrawerSection>
 
-            {/* ════ Seção 3 — Integração ERP ══════════════════ */}
+            {/* ════ Seção 3 — Envio por E-mail ✅ NOVO ═════════ */}
+            <DrawerSection
+              title="Envio por E-mail"
+              icon={<Mail size={14} strokeWidth={2} />}
+            >
+              {/* Toggle habilitar/desabilitar */}
+              <div className="
+                px-3 py-2.5 rounded-lg
+                bg-surface-50 dark:bg-surface-900
+                border border-surface-100 dark:border-surface-800
+              ">
+                <ToggleSwitch
+                  id="cfg-email-enabled"
+                  checked={config.emailSend?.enabled ?? false}
+                  onChange={v => updateEmailSend({ enabled: v })}
+                  label="Habilitar envio por e-mail"
+                />
+              </div>
+
+              {config.emailSend?.enabled && (
+                <div className="space-y-3 animate-slide-in-up">
+
+                  {/* Aviso Resend */}
+                  <div
+                    role="note"
+                    className="
+                      flex items-start gap-2 px-3 py-2.5 rounded-lg
+                      bg-brand-50 dark:bg-brand-950/30
+                      border border-brand-100 dark:border-brand-900
+                      text-xs text-brand-700 dark:text-brand-400
+                    "
+                  >
+                    <svg
+                      aria-hidden="true"
+                      width="14" height="14" viewBox="0 0 16 16"
+                      fill="none" className="shrink-0 mt-0.5"
+                    >
+                      <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.4"/>
+                      <path d="M8 7v4M8 5.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                    <span>
+                      Os e-mails são enviados via <strong>Resend</strong>.
+                      Configure a variável <code className="font-mono bg-brand-100 dark:bg-brand-900/50 px-1 rounded">RESEND_API_KEY</code> no painel da Vercel.
+                    </span>
+                  </div>
+
+                  {/* Nome e e-mail do remetente */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <FormField
+                      label="Nome do Remetente"
+                      htmlFor="cfg-email-from-name"
+                      hint="Ex: Empresa ABC"
+                    >
+                      <Input
+                        id="cfg-email-from-name"
+                        type="text"
+                        value={config.emailSend?.fromName ?? ''}
+                        onChange={e => updateEmailSend({ fromName: e.target.value })}
+                        placeholder={config.name || 'Minha Empresa'}
+                        maxLength={60}
+                      />
+                    </FormField>
+
+                    <FormField
+                      label="E-mail Remetente"
+                      htmlFor="cfg-email-from"
+                      required
+                      error={fromEmailError}
+                      hint="Domínio verificado no Resend"
+                    >
+                      <Input
+                        id="cfg-email-from"
+                        type="email"
+                        value={config.emailSend?.fromEmail ?? ''}
+                        onChange={e => updateEmailSend({ fromEmail: e.target.value })}
+                        placeholder="nfe@suaempresa.com.br"
+                        maxLength={80}
+                        hasError={!!fromEmailError}
+                        inputMode="email"
+                      />
+                    </FormField>
+                  </div>
+
+                  {/* Reply-To e Destino padrão */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <FormField
+                      label="Reply-To"
+                      htmlFor="cfg-email-reply"
+                      error={replyToError}
+                      hint="E-mail de resposta"
+                    >
+                      <Input
+                        id="cfg-email-reply"
+                        type="email"
+                        value={config.emailSend?.replyTo ?? ''}
+                        onChange={e => updateEmailSend({ replyTo: e.target.value })}
+                        placeholder="financeiro@empresa.com.br"
+                        maxLength={80}
+                        hasError={!!replyToError}
+                        inputMode="email"
+                      />
+                    </FormField>
+
+                    <FormField
+                      label="Destinatário Padrão"
+                      htmlFor="cfg-email-default-to"
+                      hint="Usado se o XML não tiver e-mail"
+                    >
+                      <Input
+                        id="cfg-email-default-to"
+                        type="email"
+                        value={config.emailSend?.defaultTo ?? ''}
+                        onChange={e => updateEmailSend({ defaultTo: e.target.value })}
+                        placeholder="cliente@email.com"
+                        maxLength={80}
+                        inputMode="email"
+                      />
+                    </FormField>
+                  </div>
+
+                  {/* Assunto */}
+                  <FormField
+                    label="Assunto do E-mail"
+                    htmlFor="cfg-email-subject"
+                    hint="Variáveis: {{nNF}}, {{emitente}}, {{serie}}"
+                  >
+                    <Input
+                      id="cfg-email-subject"
+                      type="text"
+                      value={config.emailSend?.subjectTemplate ?? ''}
+                      onChange={e => updateEmailSend({ subjectTemplate: e.target.value })}
+                      placeholder="DANFE NF-e {{nNF}} — {{emitente}}"
+                      maxLength={120}
+                    />
+                  </FormField>
+
+                  {/* Corpo do e-mail */}
+                  <FormField
+                    label="Corpo do E-mail (HTML)"
+                    htmlFor="cfg-email-body"
+                    hint="Suporta HTML básico. Deixe vazio para usar o padrão."
+                  >
+                    <Textarea
+                      id="cfg-email-body"
+                      rows={4}
+                      value={config.emailSend?.bodyTemplate ?? ''}
+                      onChange={e => updateEmailSend({ bodyTemplate: e.target.value })}
+                      placeholder={
+                        '<p>Prezado(a),</p>\n' +
+                        '<p>Segue em anexo o DANFE da NF-e nº <b>{{nNF}}</b>.</p>\n' +
+                        '<p>Atenciosamente,<br/>{{emitente}}</p>'
+                      }
+                    />
+                  </FormField>
+
+                  {/* Preview do template */}
+                  {config.emailSend?.subjectTemplate && (
+                    <div className="
+                      px-3 py-2.5 rounded-lg
+                      bg-surface-50 dark:bg-surface-900
+                      border border-surface-100 dark:border-surface-800
+                    ">
+                      <p className="text-[10px] font-medium text-surface-400 dark:text-surface-500 mb-1 uppercase tracking-wide">
+                        Preview do assunto
+                      </p>
+                      <p className="text-xs text-surface-700 dark:text-surface-300 font-mono">
+                        {config.emailSend.subjectTemplate
+                          .replace('{{nNF}}',      '000307873')
+                          .replace('{{emitente}}', config.name || 'Minha Empresa')
+                          .replace('{{serie}}',    '50')}
+                      </p>
+                    </div>
+                  )}
+
+                </div>
+              )}
+            </DrawerSection>
+
+            {/* ════ Seção 4 — Integração ERP ══════════════════ */}
             <DrawerSection
               title="Integração ERP"
               icon={<Plug size={14} strokeWidth={2} />}
@@ -666,7 +920,7 @@ export function CompanyConfig({ open, onClose }: CompanyConfigProps) {
               )}
             </DrawerSection>
 
-            {/* ════ Seção 4 — Import / Export ══════════════════ */}
+            {/* ════ Seção 5 — Backup de Configurações ══════════ */}
             <DrawerSection
               title="Backup de Configurações"
               icon={<Save size={14} strokeWidth={2} />}
@@ -677,7 +931,6 @@ export function CompanyConfig({ open, onClose }: CompanyConfigProps) {
               </p>
 
               <div className="grid grid-cols-2 gap-2">
-                {/* Exportar */}
                 <button
                   type="button"
                   onClick={exportConfig}
@@ -695,7 +948,6 @@ export function CompanyConfig({ open, onClose }: CompanyConfigProps) {
                   Exportar JSON
                 </button>
 
-                {/* Importar */}
                 <button
                   type="button"
                   onClick={() => importInputRef.current?.click()}
@@ -733,7 +985,6 @@ export function CompanyConfig({ open, onClose }: CompanyConfigProps) {
           border-t border-surface-100 dark:border-surface-800
           bg-surface-50/50 dark:bg-surface-900/50
         ">
-          {/* Resetar */}
           <button
             type="button"
             onClick={() => {
@@ -752,7 +1003,6 @@ export function CompanyConfig({ open, onClose }: CompanyConfigProps) {
             Resetar configurações
           </button>
 
-          {/* Salvar / Fechar */}
           <button
             type="button"
             onClick={onClose}

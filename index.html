@@ -2,136 +2,150 @@
 <html lang="pt-BR" class="light">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <!-- ─── SEO ──────────────────────────────────────────────── -->
-    <meta name="author" content="Alberto Luiz" />
-    <meta name="description"
-        content="DanfeGen — Conversor gratuito de XML NF-e para DANFE PDF e Etiqueta Térmica 80mm. Sem cadastro, sem armazenamento." />
-    <meta name="keywords" content="danfe, nfe, xml, pdf, nota fiscal, sefaz, conversor, etiqueta termica, ecommerce" />
-    <meta name="robots" content="index, follow" />
+  <!-- ─── SEO ──────────────────────────────────────────────── -->
+  <meta name="author" content="Alberto Luiz" />
+  <meta name="description"
+    content="DanfeGen — Conversor gratuito de XML NF-e para DANFE PDF e Etiqueta Térmica 80mm. Sem cadastro, sem armazenamento." />
+  <meta name="keywords" content="danfe, nfe, xml, pdf, nota fiscal, sefaz, conversor, etiqueta termica, ecommerce" />
+  <meta name="robots" content="index, follow" />
 
-    <!-- ─── Open Graph ───────────────────────────────────────── -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://danfe-gen.vercel.app/" />
-    <meta property="og:title" content="DanfeGen — Conversor NF-e para DANFE" />
-    <meta property="og:description" content="Converta XML de NF-e para DANFE PDF ou Etiqueta Térmica 80mm. Grátis, sem cadastro e sem armazenamento de dados." />
-    <meta property="og:image" content="/og-preview.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="DanfeGen — Conversor NF-e para DANFE PDF" />
-    <meta property="og:locale" content="pt_BR" />
-    <meta property="og:site_name" content="DanfeGen" />
+  <!-- ─── Open Graph ───────────────────────────────────────── -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://danfe-gen.vercel.app/" />
+  <meta property="og:title" content="DanfeGen — Conversor NF-e para DANFE" />
+  <meta property="og:description" content="Converta XML de NF-e para DANFE PDF ou Etiqueta Térmica 80mm. Grátis, sem cadastro e sem armazenamento de dados." />
+  <meta property="og:image" content="https://danfe-gen.vercel.app/og-preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="DanfeGen — Conversor NF-e para DANFE PDF" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content="DanfeGen" />
 
-    <!-- ─── Twitter Card ─────────────────────────────────────── -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DanfeGen — Conversor NF-e para DANFE" />
-    <meta name="twitter:description"
-        content="Converta XML de NF-e para DANFE PDF ou Etiqueta Térmica 80mm. Grátis, sem cadastro." />
-    <meta name="twitter:image" content="/og-preview.png" />
+  <!-- ─── Twitter Card ─────────────────────────────────────── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@danfegen" />
+  <meta name="twitter:title" content="DanfeGen — Conversor NF-e para DANFE" />
+  <meta name="twitter:description"
+    content="Converta XML de NF-e para DANFE PDF ou Etiqueta Térmica 80mm. Grátis, sem cadastro." />
+  <meta name="twitter:image" content="https://danfe-gen.vercel.app/og-preview.png" />
 
-    <!-- ─── PWA / Mobile ─────────────────────────────────────── -->
-    <meta name="theme-color" content="#2563eb" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="DanfeGen" />
-    <meta name="application-name" content="DanfeGen" />
-    <meta name="mobile-web-app-capable" content="yes" />
+  <!-- ─── PWA / Mobile ─────────────────────────────────────── -->
+  <meta name="theme-color" content="#2563eb" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#1d4ed8" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="DanfeGen" />
+  <meta name="application-name" content="DanfeGen" />
+  <meta name="mobile-web-app-capable" content="yes" />
 
-    <!-- ─── Favicon ──────────────────────────────────────────── -->
-    <link rel="icon" type="image/svg+xml" href="/danfegen-icon.svg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+  <!-- ─── Favicon ──────────────────────────────────────────── -->
+  <link rel="icon" type="image/svg+xml" href="/danfegen-icon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
 
-    <!-- ─── Preload — fonte principal ────────────────────────── -->
-    <link rel="preload" href="/fonts/Inter-Variable.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+  <!-- ─── DNS Prefetch + Preconnect ────────────────────────── -->
+  <!-- Vercel edge — reduz latência do primeiro byte             -->
+  <link rel="dns-prefetch" href="https://danfe-gen.vercel.app" />
+  <link rel="preconnect" href="https://danfe-gen.vercel.app" crossorigin />
 
-    <!-- ─── Canonical ────────────────────────────────────────── -->
-    <link rel="canonical" href="https://danfe-gen.vercel.app/" />
+  <!-- ─── Preload — fonte principal ────────────────────────── -->
+  <link rel="preload" href="/fonts/Inter-Variable.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
 
-    <title>DanfeGen — Conversor NF-e para DANFE PDF</title>
+  <!-- ─── Canonical ────────────────────────────────────────── -->
+  <link rel="canonical" href="https://danfe-gen.vercel.app/" />
 
-    <!-- ─── Structured Data (JSON-LD) ────────────────────────── -->
-    <script type="application/ld+json">
-      {
-        "@context":   "https://schema.org",
-        "@type":      "WebApplication",
-        "name":       "DanfeGen",
-        "url":        "https://danfe-gen.vercel.app/",
-        "description":"Conversor gratuito de XML NF-e para DANFE PDF e Etiqueta Térmica 80mm.",
-        "applicationCategory": "BusinessApplication",
-        "operatingSystem": "Web",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "BRL"
-        },
-        "author": {
-          "@type": "Person",
-          "name":  "Alberto Luiz",
-          "url":   "https://github.com/alberto2santos"
-        }
-      }
-    </script>
-    <!-- ─── Anti-FOUC: tema aplicado antes do React montar ───── -->
-    <script>
-        (function () {
-            try {
-                var stored = localStorage.getItem('danfegen-theme')
-                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-                var isDark = stored === 'dark' || (!stored && prefersDark)
-                document.documentElement.classList.toggle('dark', isDark)
-            } catch (_) { }
-        })()
-    </script>
+  <title>DanfeGen — Conversor NF-e para DANFE PDF</title>
+
+  <!-- ─── Structured Data (JSON-LD) ────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "DanfeGen",
+    "url": "https://danfe-gen.vercel.app/",
+    "description": "Conversor gratuito de XML NF-e para DANFE PDF e Etiqueta Térmica 80mm.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "inLanguage": "pt-BR",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "BRL"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Alberto Luiz",
+      "url": "https://github.com/alberto2santos"
+    }
+  }
+  </script>
+
+  <!-- ─── Anti-FOUC: tema antes do React montar ────────────── -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('danfegen-theme')
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        var isDark = stored === 'dark' || (!stored && prefersDark)
+        document.documentElement.classList.toggle('dark', isDark)
+        document.documentElement.setAttribute(
+          'data-theme', isDark ? 'dark' : 'light'
+        )
+      } catch (_) { }
+    })()
+  </script>
 </head>
 
 <body class="bg-surface-50 text-surface-900 antialiased dark:bg-surface-950 dark:text-surface-50">
 
-    <!-- ─── Skip links — acessibilidade via teclado ──────────── -->
-    <a href="#main-content"
-        class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded-lg focus:font-semibold focus:shadow-modal focus:outline-none">
-        Pular para o conteúdo principal
-    </a>
+  <!-- ─── Skip links — acessibilidade via teclado ──────────── -->
+  <a href="#main-content"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded-lg focus:font-semibold focus:shadow-modal focus:outline-none">
+    Pular para o conteúdo principal
+  </a>
 
-    <a href="#upload-zone"
-        class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-48 focus:z-[100] focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded-lg focus:font-semibold focus:shadow-modal focus:outline-none">
-        Ir para o upload
-    </a>
+  <a href="#upload-zone"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-48 focus:z-[100] focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded-lg focus:font-semibold focus:shadow-modal focus:outline-none">
+    Ir para o upload
+  </a>
 
-    <!-- ─── Root do React ────────────────────────────────────── -->
-    <div id="root" role="application" aria-label="DanfeGen — Conversor NF-e para DANFE"></div>
+  <!-- ─── Root do React ────────────────────────────────────── -->
+  <div id="root" role="application" aria-label="DanfeGen — Conversor NF-e para DANFE"></div>
 
-    <!-- ─── Noscript fallback ─────────────────────────────────── -->
-    <noscript>
-        <div role="alert" style="
-          display:     flex;
-          align-items: center;
-          justify-content: center;
-          min-height:  100dvh;
-          padding:     2rem;
-          font-family: system-ui, sans-serif;
-          background:  #f4f4f5;
-          color:       #18181b;
-          text-align:  center;
-        ">
-            <div>
-                <strong style="font-size: 1.25rem; display: block; margin-bottom: 0.5rem;">
-                    JavaScript necessário
-                </strong>
-                <p style="color: #52525b; max-width: 360px;">
-                    O DanfeGen precisa de JavaScript para funcionar.
-                    Por favor, habilite-o no seu navegador e recarregue a página.
-                </p>
-            </div>
-        </div>
-    </noscript>
+  <!-- ─── Noscript fallback ────────────────────────────────── -->
+  <noscript>
+    <div role="alert" style="
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      min-height:      100dvh;
+      padding:         2rem;
+      font-family:     system-ui, sans-serif;
+      background:      #f4f4f5;
+      color:           #18181b;
+      text-align:      center;
+    ">
+      <div>
+        <strong style="font-size: 1.25rem; display: block; margin-bottom: 0.5rem;">
+          JavaScript necessário
+        </strong>
+        <p style="color: #52525b; max-width: 360px;">
+          O DanfeGen precisa de JavaScript para funcionar.
+          Por favor, habilite-o no seu navegador e recarregue a página.
+        </p>
+      </div>
+    </div>
+  </noscript>
 
-    <!-- ─── Entry point Vite ─────────────────────────────────── -->
-    <script type="module" src="/src/main.tsx"></script>
+  <!-- ─── Entry point Vite ─────────────────────────────────── -->
+  <script type="module" src="/src/main.tsx"></script>
+
 </body>
-
 </html>
