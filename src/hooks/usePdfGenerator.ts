@@ -1,5 +1,7 @@
 import { useState, useCallback }  from 'react'
+import React                      from 'react'
 import { pdf }                    from '@react-pdf/renderer'
+import type { DocumentProps }     from '@react-pdf/renderer'
 import { DanfeA4 }                from '@/components/Danfe/DanfeA4'
 import type { NFeDados }          from '@/types/nfe.types'
 import type { CompanyConfig }     from '@/types/company.types'
@@ -19,12 +21,17 @@ export function usePdfGenerator() {
     setError(null)
 
     try {
-      // ─── Tenta gerar diretamente no browser ───────────────
+      // ─── Gera diretamente no browser ──────────────────────
       console.group('[DanfeGen] Tentando geração client-side')
       console.log('nfe:', nfe)
       console.log('config:', config)
 
-      const element = DanfeA4({ nfe, config })
+      // retorna <Document> internamente, o cast é seguro
+      const element = React.createElement(
+        DanfeA4,
+        { nfe, config }
+      ) as unknown as React.ReactElement<DocumentProps>
+
       console.log('DanfeA4 element criado:', element)
 
       const blob = await pdf(element).toBlob()
@@ -39,7 +46,6 @@ export function usePdfGenerator() {
       URL.revokeObjectURL(url)
 
     } catch (clientErr) {
-      // ─── Log do erro real client-side ─────────────────────
       console.groupEnd()
       console.error('[DanfeGen] ❌ Falha client-side:', clientErr)
       console.error('[DanfeGen] Stack:', clientErr instanceof Error ? clientErr.stack : clientErr)
@@ -63,7 +69,6 @@ export function usePdfGenerator() {
         })
 
         console.log('API status:', res.status)
-        console.log('API headers:', Object.fromEntries(res.headers.entries()))
 
         if (!res.ok) {
           const errorBody = await res.text()
@@ -73,6 +78,7 @@ export function usePdfGenerator() {
         }
 
         console.groupEnd()
+
         const blob = await res.blob()
         const url  = URL.createObjectURL(blob)
         const link = document.createElement('a')
